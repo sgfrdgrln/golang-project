@@ -1,4 +1,4 @@
-// profit calculator
+// bank
 
 module github.com/sgfrdgrln/golang-project
 
