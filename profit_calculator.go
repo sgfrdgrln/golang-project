@@ -1,8 +1,20 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"os"
 )
+
+const calculationFile = "calculation.txt"
+
+func storeCalculationToFile(EBT, profit, ratio float64) {
+
+	calculationText := fmt.Sprintf("Earning before tax: $%.2f\nProfit: $%.2f\nRatio: %.2f", EBT, profit, ratio)
+
+	os.WriteFile(calculationFile, []byte(calculationText), 0644)
+
+}
 
 func main() {
 
@@ -10,7 +22,12 @@ func main() {
 
 	// initialize revenue, expenses, and taxRate based on user input
 
-	revenue, expenses, taxRate = promptUser(revenue, expenses, taxRate)
+	revenue, expenses, taxRate, err := promptUser(revenue, expenses, taxRate)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// calculate the ebt, profit, and ratio
 
@@ -20,18 +37,32 @@ func main() {
 
 	formatAndPrintText(EBT, profit, ratio)
 
+	storeCalculationToFile(EBT, profit, ratio)
+
 }
-func promptUser(revenue, expenses, taxRate float64) (float64, float64, float64) {
+func promptUser(revenue, expenses, taxRate float64) (float64, float64, float64, error) {
 
-	fmt.Print("Enter revenue: ")
-	fmt.Scan(&revenue)
-	fmt.Print("Enter expenses: ")
-	fmt.Scan(&expenses)
-	fmt.Print("Enter tax rate: ")
-	fmt.Scan(&taxRate)
+	for {
+		fmt.Print("Enter revenue: ")
+		fmt.Scan(&revenue)
 
-	return revenue, expenses, taxRate
+		if revenue <= 0 {
+			return revenue, expenses, taxRate, errors.New("Invalid revenue!\nClosing program...")
+		}
 
+		fmt.Print("Enter expenses: ")
+		fmt.Scan(&expenses)
+
+		if expenses <= 0 {
+			return revenue, expenses, taxRate, errors.New("Invalid expenses!\nClosing program...")
+		}
+		fmt.Print("Enter tax rate: ")
+		fmt.Scan(&taxRate)
+		if taxRate <= 0 {
+			return revenue, expenses, taxRate, errors.New("Invalid tax rate!\nClosing program...")
+		}
+		return revenue, expenses, taxRate, nil
+	}
 }
 func calculate(revenue, expenses, taxRate float64) (float64, float64, float64) {
 
