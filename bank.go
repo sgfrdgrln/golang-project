@@ -19,14 +19,14 @@ func getBalanceFromFile() (float64, error) {
 	data, err := os.ReadFile(accountBalanceFile)
 
 	if err != nil {
-		return 1000, errors.New("Failed to find balance file")
+		return 1000, errors.New("failed to find balance file")
 	}
 
 	balanceText := string(data)
 	balance, err := strconv.ParseFloat(balanceText, 64)
 
 	if err != nil {
-		return 1000, errors.New("Failed to parse stored balance value")
+		return 1000, errors.New("failed to parse stored balance value")
 	}
 	return balance, nil
 }
@@ -52,17 +52,13 @@ func main() {
 		switch choice {
 
 		case 1:
-
 			checkBalance(accountBalance)
 
-			break
 		case 2:
 			depositMoney(accountBalance)
 
-			break
 		case 3:
 			withdrawMoney(accountBalance)
-			break
 		case 4:
 			fmt.Println("Stopping the program.")
 			fmt.Println("Thank you for using Go Bank!")
@@ -75,26 +71,17 @@ func main() {
 	}
 
 }
-func displayOptions() {
 
-	fmt.Println("What do you want to do?")
-	fmt.Println("1. Check balance")
-	fmt.Println("2. Deposit money")
-	fmt.Println("3. Withdraw money")
-	fmt.Println("4. Exit")
+func depositMoney(balance float64) {
 
-}
-
-func depositMoney(accountBalance float64) {
-
-	accountBalance, err := getBalanceFromFile()
+	balance, err := getBalanceFromFile()
 
 	if err != nil {
 
 		fmt.Println("ERROR")
 		fmt.Println(err)
 		fmt.Println("------")
-		writeBalanceToFile(accountBalance)
+		writeBalanceToFile(balance)
 	}
 
 	var depositedAmount float64
@@ -107,56 +94,56 @@ func depositMoney(accountBalance float64) {
 
 	} else {
 		fmt.Printf("\nYou deposited: $%.2f\n", depositedAmount)
-		accountBalance += depositedAmount
-		fmt.Printf("\nYour new balance is: $%.2f\n", accountBalance)
-		writeBalanceToFile(accountBalance)
+		balance += depositedAmount
+		fmt.Printf("\nYour new balance is: $%.2f\n", balance)
+		writeBalanceToFile(balance)
 		return
 	}
 }
-func withdrawMoney(accountBalance float64) {
+func withdrawMoney(balance float64) {
 
-	accountBalance, err := getBalanceFromFile()
+	balance, err := getBalanceFromFile()
 
 	if err != nil {
 
 		fmt.Println("ERROR")
 		fmt.Println(err)
 		fmt.Println("------")
-		writeBalanceToFile(accountBalance)
+		writeBalanceToFile(balance)
 	}
 
 	var withdrawAmount float64
 	fmt.Print("Amount to withdraw: ")
 	fmt.Scan(&withdrawAmount)
-	if withdrawAmount > accountBalance {
+	if withdrawAmount > balance {
 		fmt.Println("Your current balance is not enough to withdraw that amount!")
-		writeBalanceToFile(accountBalance)
+		writeBalanceToFile(balance)
 	} else if withdrawAmount <= 0 {
 		fmt.Println("You did not withdraw anything!")
-		writeBalanceToFile(accountBalance)
+		writeBalanceToFile(balance)
 		return
 	} else {
-		accountBalance -= withdrawAmount
-		fmt.Printf("\nYour new balance is: $%.2f\n", accountBalance)
-		writeBalanceToFile(accountBalance)
+		balance -= withdrawAmount
+		fmt.Printf("\nYour new balance is: $%.2f\n", balance)
+		writeBalanceToFile(balance)
 		return
 	}
 }
-func checkBalance(accountBalance float64) {
+func checkBalance(balance float64) {
 
-	accountBalance, err := getBalanceFromFile()
+	balance, err := getBalanceFromFile()
 
 	if err != nil {
 
 		fmt.Println("ERROR")
 		fmt.Println(err)
 		fmt.Println("------")
-		writeBalanceToFile(accountBalance)
+		writeBalanceToFile(balance)
 	}
-	if accountBalance == 0 {
+	if balance == 0 {
 		fmt.Println("You have zero balance.")
 	} else {
-		fmt.Println("Your balance is: $", accountBalance)
+		fmt.Println("Your balance is: $", balance)
 	}
 
 }
