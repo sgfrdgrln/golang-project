@@ -1,42 +1,18 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"os"
-	"strconv"
+	"github.com/sgfrdgrln/golang-project/file-handling"
 )
 
 const accountBalanceFile = "balance.txt"
 
-func writeBalanceToFile(balance float64) {
-	balanceText := fmt.Sprint(balance)
-	os.WriteFile(accountBalanceFile, []byte(balanceText), 0644)
-
-}
-
-func getBalanceFromFile() (float64, error) {
-	data, err := os.ReadFile(accountBalanceFile)
-
-	if err != nil {
-		return 1000, errors.New("failed to find balance file")
-	}
-
-	balanceText := string(data)
-	balance, err := strconv.ParseFloat(balanceText, 64)
-
-	if err != nil {
-		return 1000, errors.New("failed to parse stored balance value")
-	}
-	return balance, nil
-}
-
 func main() {
 
-	var accountBalance, err = getBalanceFromFile()
+	var accountBalance, err = file_handling.GetFloatFromFile(accountBalanceFile)
 
 	if err != nil {
-		writeBalanceToFile(accountBalance)
+		file_handling.WriteFloatToFile(accountBalance, accountBalanceFile)
 	}
 
 	var choice int
@@ -74,14 +50,14 @@ func main() {
 
 func depositMoney(balance float64) {
 
-	balance, err := getBalanceFromFile()
+	balance, err := file_handling.GetFloatFromFile(accountBalanceFile)
 
 	if err != nil {
 
 		fmt.Println("ERROR")
 		fmt.Println(err)
 		fmt.Println("------")
-		writeBalanceToFile(balance)
+		file_handling.WriteFloatToFile(balance, accountBalanceFile)
 	}
 
 	var depositedAmount float64
@@ -96,20 +72,20 @@ func depositMoney(balance float64) {
 		fmt.Printf("\nYou deposited: $%.2f\n", depositedAmount)
 		balance += depositedAmount
 		fmt.Printf("\nYour new balance is: $%.2f\n", balance)
-		writeBalanceToFile(balance)
+		file_handling.WriteFloatToFile(balance, accountBalanceFile)
 		return
 	}
 }
 func withdrawMoney(balance float64) {
 
-	balance, err := getBalanceFromFile()
+	balance, err := file_handling.GetFloatFromFile(accountBalanceFile)
 
 	if err != nil {
 
 		fmt.Println("ERROR")
 		fmt.Println(err)
 		fmt.Println("------")
-		writeBalanceToFile(balance)
+		file_handling.WriteFloatToFile(balance, accountBalanceFile)
 	}
 
 	var withdrawAmount float64
@@ -117,28 +93,28 @@ func withdrawMoney(balance float64) {
 	fmt.Scan(&withdrawAmount)
 	if withdrawAmount > balance {
 		fmt.Println("Your current balance is not enough to withdraw that amount!")
-		writeBalanceToFile(balance)
+		file_handling.WriteFloatToFile(balance, accountBalanceFile)
 	} else if withdrawAmount <= 0 {
 		fmt.Println("You did not withdraw anything!")
-		writeBalanceToFile(balance)
+		file_handling.WriteFloatToFile(balance, accountBalanceFile)
 		return
 	} else {
 		balance -= withdrawAmount
 		fmt.Printf("\nYour new balance is: $%.2f\n", balance)
-		writeBalanceToFile(balance)
+		file_handling.WriteFloatToFile(balance, accountBalanceFile)
 		return
 	}
 }
 func checkBalance(balance float64) {
 
-	balance, err := getBalanceFromFile()
+	balance, err := file_handling.GetFloatFromFile(accountBalanceFile)
 
 	if err != nil {
 
 		fmt.Println("ERROR")
 		fmt.Println(err)
 		fmt.Println("------")
-		writeBalanceToFile(balance)
+		file_handling.WriteFloatToFile(balance, accountBalanceFile)
 	}
 	if balance == 0 {
 		fmt.Println("You have zero balance.")
