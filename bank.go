@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/Pallinder/go-randomdata"
 	"github.com/sgfrdgrln/golang-project/file-handling"
 )
 
@@ -17,8 +18,10 @@ func main() {
 
 	var choice int
 
+	fmt.Println("Welcome to Go Bank!")
+	fmt.Println("Reach us 24/7", randomdata.PhoneNumber())
+
 	for {
-		fmt.Println("Welcome to Go Bank!")
 
 		displayOptions()
 
